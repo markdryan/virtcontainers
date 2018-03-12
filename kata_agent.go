@@ -168,8 +168,8 @@ func (k *kataAgent) agentURL() (string, error) {
 	}
 }
 
-func (k *kataAgent) capabilities() capabilities {
-	var caps capabilities
+func (k *kataAgent) capabilities() Capabilities {
+	var caps Capabilities
 
 	// add all capabilities supported by agent
 	caps.setBlockDeviceSupport()
@@ -180,7 +180,7 @@ func (k *kataAgent) capabilities() capabilities {
 func (k *kataAgent) createPod(pod *Pod) error {
 	switch s := k.vmSocket.(type) {
 	case Socket:
-		err := pod.hypervisor.addDevice(s, serialPortDev)
+		err := pod.hypervisor.addDevice(s, SerialPortDev)
 		if err != nil {
 			return err
 		}
@@ -201,7 +201,7 @@ func (k *kataAgent) createPod(pod *Pod) error {
 		return err
 	}
 
-	return pod.hypervisor.addDevice(sharedVolume, fsDev)
+	return pod.hypervisor.addDevice(sharedVolume, FsDev)
 }
 
 func cmdToKataProcess(cmd Cmd) (process *grpc.Process, err error) {
@@ -621,13 +621,13 @@ func (k *kataAgent) createContainer(pod *Pod, c *Container) (*Process, error) {
 		// without trying to match and update it into the OCI spec list
 		// of actual devices. The device corresponding to the rootfs is
 		// a very specific case.
-		rootfsDevice := &grpc.Device{
+		rootFsDevice := &grpc.Device{
 			Type:          kataBlkDevType,
 			VmPath:        virtPath,
 			ContainerPath: "",
 		}
 
-		ctrDevices = append(ctrDevices, rootfsDevice)
+		ctrDevices = append(ctrDevices, rootFsDevice)
 
 		rootfs.Source = virtPath
 		rootfs.MountPoint = rootPathParent

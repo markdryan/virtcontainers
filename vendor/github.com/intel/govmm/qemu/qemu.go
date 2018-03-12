@@ -731,19 +731,19 @@ type VhostUserDevice struct {
 }
 
 // Valid returns true if there is a valid structure defined for VhostUserDevice
-func (vhostuserDev VhostUserDevice) Valid() bool {
+func (VhostuserDev VhostUserDevice) Valid() bool {
 
-	if vhostuserDev.SocketPath == "" || vhostuserDev.CharDevID == "" {
+	if VhostuserDev.SocketPath == "" || VhostuserDev.CharDevID == "" {
 		return false
 	}
 
-	switch vhostuserDev.VhostUserType {
+	switch VhostuserDev.VhostUserType {
 	case VhostUserNet:
-		if vhostuserDev.TypeDevID == "" || vhostuserDev.Address == "" {
+		if VhostuserDev.TypeDevID == "" || VhostuserDev.Address == "" {
 			return false
 		}
 	case VhostUserSCSI:
-		if vhostuserDev.TypeDevID == "" {
+		if VhostuserDev.TypeDevID == "" {
 			return false
 		}
 	case VhostUserBlk:
@@ -755,36 +755,36 @@ func (vhostuserDev VhostUserDevice) Valid() bool {
 }
 
 // QemuParams returns the qemu parameters built out of this vhostuser device.
-func (vhostuserDev VhostUserDevice) QemuParams(config *Config) []string {
+func (VhostuserDev VhostUserDevice) QemuParams(config *Config) []string {
 	var qemuParams []string
 	var charParams []string
 	var netParams []string
 	var devParams []string
 
 	charParams = append(charParams, "socket")
-	charParams = append(charParams, fmt.Sprintf("id=%s", vhostuserDev.CharDevID))
-	charParams = append(charParams, fmt.Sprintf("path=%s", vhostuserDev.SocketPath))
+	charParams = append(charParams, fmt.Sprintf("id=%s", VhostuserDev.CharDevID))
+	charParams = append(charParams, fmt.Sprintf("path=%s", VhostuserDev.SocketPath))
 
-	switch vhostuserDev.VhostUserType {
+	switch VhostuserDev.VhostUserType {
 	// if network based vhost device:
 	case VhostUserNet:
 		netParams = append(netParams, "type=vhost-user")
-		netParams = append(netParams, fmt.Sprintf("id=%s", vhostuserDev.TypeDevID))
-		netParams = append(netParams, fmt.Sprintf("chardev=%s", vhostuserDev.CharDevID))
+		netParams = append(netParams, fmt.Sprintf("id=%s", VhostuserDev.TypeDevID))
+		netParams = append(netParams, fmt.Sprintf("chardev=%s", VhostuserDev.CharDevID))
 		netParams = append(netParams, "vhostforce")
 
 		devParams = append(devParams, VhostUserNet)
-		devParams = append(devParams, fmt.Sprintf("netdev=%s", vhostuserDev.TypeDevID))
-		devParams = append(devParams, fmt.Sprintf("mac=%s", vhostuserDev.Address))
+		devParams = append(devParams, fmt.Sprintf("netdev=%s", VhostuserDev.TypeDevID))
+		devParams = append(devParams, fmt.Sprintf("mac=%s", VhostuserDev.Address))
 	case VhostUserSCSI:
 		devParams = append(devParams, VhostUserSCSI)
-		devParams = append(devParams, fmt.Sprintf("id=%s", vhostuserDev.TypeDevID))
-		devParams = append(devParams, fmt.Sprintf("chardev=%s", vhostuserDev.CharDevID))
+		devParams = append(devParams, fmt.Sprintf("id=%s", VhostuserDev.TypeDevID))
+		devParams = append(devParams, fmt.Sprintf("chardev=%s", VhostuserDev.CharDevID))
 	case VhostUserBlk:
 		devParams = append(devParams, VhostUserBlk)
 		devParams = append(devParams, "logical_block_size=4096")
 		devParams = append(devParams, "size=512M")
-		devParams = append(devParams, fmt.Sprintf("chardev=%s", vhostuserDev.CharDevID))
+		devParams = append(devParams, fmt.Sprintf("chardev=%s", VhostuserDev.CharDevID))
 	default:
 		return nil
 	}
@@ -793,7 +793,7 @@ func (vhostuserDev VhostUserDevice) QemuParams(config *Config) []string {
 	qemuParams = append(qemuParams, strings.Join(charParams, ","))
 
 	// if network based vhost device:
-	if vhostuserDev.VhostUserType == VhostUserNet {
+	if VhostuserDev.VhostUserType == VhostUserNet {
 		qemuParams = append(qemuParams, "-netdev")
 		qemuParams = append(qemuParams, strings.Join(netParams, ","))
 	}
@@ -810,8 +810,8 @@ type VFIODevice struct {
 }
 
 // Valid returns true if the VFIODevice structure is valid and complete.
-func (vfioDev VFIODevice) Valid() bool {
-	if vfioDev.BDF == "" {
+func (VfioDev VFIODevice) Valid() bool {
+	if VfioDev.BDF == "" {
 		return false
 	}
 
@@ -819,10 +819,10 @@ func (vfioDev VFIODevice) Valid() bool {
 }
 
 // QemuParams returns the qemu parameters built out of this vfio device.
-func (vfioDev VFIODevice) QemuParams(config *Config) []string {
+func (VfioDev VFIODevice) QemuParams(config *Config) []string {
 	var qemuParams []string
 
-	deviceParam := fmt.Sprintf("vfio-pci,host=%s", vfioDev.BDF)
+	deviceParam := fmt.Sprintf("vfio-pci,host=%s", VfioDev.BDF)
 	qemuParams = append(qemuParams, "-device")
 	qemuParams = append(qemuParams, deviceParam)
 

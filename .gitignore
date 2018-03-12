@@ -3,6 +3,7 @@
 *.swp
 /hack/virtc/virtc
 /hook/mock/hook
+/plugins/hypervisor/qemu/*.so
 /shim/mock/shim
 /shim/mock/cc-shim/cc-shim
 /shim/mock/kata-shim/kata-shim
